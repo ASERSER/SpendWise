@@ -1,17 +1,17 @@
 "use client"
 
-import { Pie, PieChart, ResponsiveContainer } from "recharts"
+import { Pie, PieChart, ResponsiveContainer, Cell } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartTooltip, ChartTooltipContent, ChartContainer, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
 import { categories } from "@/lib/data"
 import { formatCurrency } from "@/lib/utils"
 
 const chartData = [
-  { category: "Groceries", value: 250.00, fill: "var(--color-groceries)" },
-  { category: "Dining", value: 120.50, fill: "var(--color-dining)" },
-  { category: "Transport", value: 50.00, fill: "var(--color-transport)" },
-  { category: "Bills", value: 850.00, fill: "var(--color-bills)" },
-  { category: "Entertainment", value: 300.00, fill: "var(--color-entertainment)" },
+  { category: "groceries", value: 250.00 },
+  { category: "dining", value: 120.50 },
+  { category: "transport", value: 50.00 },
+  { category: "bills", value: 850.00 },
+  { category: "entertainment", value: 300.00 },
 ];
 
 const chartConfig = categories.reduce((acc, category) => {
@@ -41,7 +41,11 @@ export function CategoryPieChart() {
                         hideLabel 
                     />} 
                 />
-                <Pie data={chartData} dataKey="value" nameKey="category" innerRadius={60} strokeWidth={5} />
+                <Pie data={chartData} dataKey="value" nameKey="category" innerRadius={60} strokeWidth={5}>
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={chartConfig[entry.category]?.color} />
+                  ))}
+                </Pie>
                 <ChartLegend
                     content={<ChartLegendContent nameKey="category" />}
                     className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
