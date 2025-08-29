@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -50,8 +51,8 @@ export function BudgetForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create New Budget</CardTitle>
-        <CardDescription>Get AI-powered advice on your new budget.</CardDescription>
+        <CardTitle>AI Budget Helper</CardTitle>
+        <CardDescription>Get AI-powered advice for a new budget before adding it.</CardDescription>
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -102,7 +103,7 @@ export function BudgetForm() {
           <CardFooter>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-              Get Guidance & Save
+              Get Guidance
             </Button>
           </CardFooter>
         </form>
