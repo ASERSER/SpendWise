@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -178,76 +179,73 @@ export function BudgetList() {
             </Card>
           );
         })}
-        <DialogTrigger asChild>
-            <Card
-              className="flex cursor-pointer items-center justify-center border-dashed hover:border-primary hover:bg-muted"
-              onClick={() => setAddDialogOpen(true)}
-            >
-              <CardContent className="p-6">
-                <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                  <Plus className="h-8 w-8" />
-                  <span className="font-medium">Add New Budget</span>
-                </div>
-              </CardContent>
-            </Card>
-        </DialogTrigger>
-      </div>
-
-      {/* Add Budget Dialog */}
-      <Dialog open={isAddDialogOpen} onOpenChange={setAddDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add New Budget</DialogTitle>
-            <DialogDescription>
-              Create a new budget for a category.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="category" className="text-right">
-                Category
-              </Label>
-              <Select
-                value={addForm.scope}
-                onValueChange={(value) =>
-                  setAddForm({ ...addForm, scope: value })
-                }
+        <Dialog open={isAddDialogOpen} onOpenChange={setAddDialogOpen}>
+          <DialogTrigger asChild>
+              <Card
+                className="flex cursor-pointer items-center justify-center border-dashed hover:border-primary hover:bg-muted"
               >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {allCategories.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <CardContent className="p-6">
+                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                    <Plus className="h-8 w-8" />
+                    <span className="font-medium">Add New Budget</span>
+                  </div>
+                </CardContent>
+              </Card>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Budget</DialogTitle>
+              <DialogDescription>
+                Create a new budget for a category.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="category" className="text-right">
+                  Category
+                </Label>
+                <Select
+                  value={addForm.scope}
+                  onValueChange={(value) =>
+                    setAddForm({ ...addForm, scope: value })
+                  }
+                >
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {allCategories.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="amount" className="text-right">
+                  Amount
+                </Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  value={addForm.amount}
+                  onChange={(e) =>
+                    setAddForm({ ...addForm, amount: e.target.value })
+                  }
+                  className="col-span-3"
+                />
+              </div>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="amount" className="text-right">
-                Amount
-              </Label>
-              <Input
-                id="amount"
-                type="number"
-                value={addForm.amount}
-                onChange={(e) =>
-                  setAddForm({ ...addForm, amount: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setAddDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleAddBudget}>Add Budget</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setAddDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleAddBudget}>Add Budget</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
 
       {/* Edit Budget Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setEditDialogOpen}>
