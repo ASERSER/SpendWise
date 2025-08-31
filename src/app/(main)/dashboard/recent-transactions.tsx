@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,11 +13,15 @@ const getAccount = (id: string) => accounts.find(a => a.id === id);
 
 // A client-side component to safely render the date
 function SafeDate({ dateString }: { dateString: string }) {
-  const [formattedDate, setFormattedDate] = useState("");
+  const [formattedDate, setFormattedDate] = useState<string | null>(null);
 
   useEffect(() => {
     setFormattedDate(new Date(dateString).toLocaleDateString());
   }, [dateString]);
+
+  if (!formattedDate) {
+    return null;
+  }
 
   return <>{formattedDate}</>;
 }
