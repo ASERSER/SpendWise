@@ -1,12 +1,28 @@
+
+"use client";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { transactions, categories, accounts } from "@/lib/data";
 import { formatCurrency } from "@/lib/utils";
 import { ArrowDownLeft, ArrowUpRight, Repeat } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const getCategory = (id: string | null) => categories.find(c => c.id === id);
 const getAccount = (id: string) => accounts.find(a => a.id === id);
+
+// A client-side component to safely render the date
+function SafeDate({ dateString }: { dateString: string }) {
+  const [formattedDate, setFormattedDate] = useState("");
+
+  useEffect(() => {
+    setFormattedDate(new Date(dateString).toLocaleDateString());
+  }, [dateString]);
+
+  return <>{formattedDate}</>;
+}
+
 
 export function RecentTransactions() {
     return (
@@ -42,7 +58,9 @@ export function RecentTransactions() {
                                             </div>
                                             <div>
                                                 <div className="font-medium">{tx.note}</div>
-                                                <div className="text-sm text-muted-foreground">{new Date(tx.date).toLocaleDateString()}</div>
+                                                <div className="text-sm text-muted-foreground">
+                                                  <SafeDate dateString={tx.date} />
+                                                </div>
                                             </div>
                                         </div>
                                     </TableCell>
