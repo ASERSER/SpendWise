@@ -1,9 +1,15 @@
+
+"use client";
+
+import { useContext } from "react";
 import { PageHeader } from "@/components/page-header";
-import { transactions } from "@/lib/data";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
+import { TransactionContext } from "../transaction-context";
 
 export default function TransactionsPage() {
+    const { transactions } = useContext(TransactionContext);
+
     return (
         <>
             <PageHeader

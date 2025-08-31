@@ -4,6 +4,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useContext } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,12 +34,15 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { accounts, categories } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
+import { TransactionContext } from "./transaction-context";
+import { formatCurrency } from "@/lib/utils";
 
 const expenseSchema = z.object({
   amount: z.coerce.number().positive("Amount must be a positive number."),
   categoryId: z.string().min(1, "Please select a category."),
   accountId: z.string().min(1, "Please select an account."),
-  note: z.string().optional(),
+  note: z.string().min(1, "Please enter a note for the expense."),
+  date: z.string(),
 });
 
 type ExpenseFormValues = z.infer<typeof expenseSchema>;
@@ -50,6 +54,8 @@ interface AddExpenseDialogProps {
 
 export function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialogProps) {
   const { toast } = useToast();
+  const { addTransaction } = useContext(TransactionContext);
+
   const form = useForm<ExpenseFormValues>({
     resolver: zodResolver(expenseSchema),
     defaultValues: {
@@ -57,15 +63,24 @@ export function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialogProps) 
       categoryId: "",
       accountId: "",
       note: "",
+      date: new Date().toISOString().split('T')[0], // For input type="date"
     },
   });
 
   function onSubmit(values: ExpenseFormValues) {
-    // In a real app, you would handle the API call here.
-    console.log("Expense logged:", values);
+    addTransaction({
+      amount: values.amount,
+      categoryId: values.categoryId,
+      accountId: values.accountId,
+      note: values.note,
+      date: new Date(values.date).toISOString(),
+      type: "expense",
+      currency: "MAD", // Assuming default currency
+    });
+    
     toast({
       title: "Expense Logged",
-      description: `Your expense of ${values.amount} has been saved.`,
+      description: `Your expense of ${formatCurrency(values.amount)} has been saved.`,
     });
     form.reset();
     onOpenChange(false);
@@ -152,6 +167,23 @@ export function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialogProps) 
                   </FormItem>
                 )}
               />
+               <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem className="grid grid-cols-4 items-center gap-4">
+                    <FormLabel className="text-right">Date</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        className="col-span-3"
+                        {...field}
+                      />
+                    </FormControl>
+                     <FormMessage className="col-span-4 col-start-2" />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="note"
@@ -160,7 +192,7 @@ export function AddExpenseDialog({ open, onOpenChange }: AddExpenseDialogProps) 
                     <FormLabel className="text-right">Note</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Optional note..."
+                        placeholder="e.g. Weekly grocery shopping"
                         className="col-span-3"
                         {...field}
                       />

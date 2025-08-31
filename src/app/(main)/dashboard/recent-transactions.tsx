@@ -1,12 +1,14 @@
+
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { transactions, categories, accounts } from "@/lib/data";
+import { categories, accounts } from "@/lib/data";
 import { formatCurrency } from "@/lib/utils";
 import { ArrowDownLeft, ArrowUpRight, Repeat } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { TransactionContext } from "../transaction-context";
 
 const getCategory = (id: string | null) => categories.find(c => c.id === id);
 const getAccount = (id: string) => accounts.find(a => a.id === id);
@@ -16,11 +18,16 @@ function SafeDate({ dateString }: { dateString: string }) {
   const [formattedDate, setFormattedDate] = useState<string | null>(null);
 
   useEffect(() => {
-    setFormattedDate(new Date(dateString).toLocaleDateString());
+    // Renders the date in a format like "Aug 25, 2024"
+    setFormattedDate(new Date(dateString).toLocaleDateString(undefined, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    }));
   }, [dateString]);
 
   if (!formattedDate) {
-    return null;
+    return null; // Render nothing on the server
   }
 
   return <>{formattedDate}</>;
@@ -28,6 +35,8 @@ function SafeDate({ dateString }: { dateString: string }) {
 
 
 export function RecentTransactions() {
+    const { transactions } = useContext(TransactionContext);
+
     return (
         <Card>
             <CardHeader>
