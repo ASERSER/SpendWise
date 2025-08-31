@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MoreVertical, Plus } from "lucide-react";
 import {
   budgets as initialBudgets,
@@ -68,6 +68,13 @@ export function BudgetList() {
   const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
   const [editForm, setEditForm] = useState({ name: "", amount: "" });
   const [addForm, setAddForm] = useState({ scope: "", amount: "" });
+  const [daysInMonth, setDaysInMonth] = useState(30);
+
+  useEffect(() => {
+      const date = new Date();
+      setDaysInMonth(new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate());
+  }, []);
+
 
   // Edit and Delete handlers
   const handleEditClick = (budget: Budget) => {
@@ -118,12 +125,6 @@ export function BudgetList() {
     setAddDialogOpen(false);
     setAddForm({ scope: "", amount: "" });
   };
-
-  const daysInMonth = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth() + 1,
-    0
-  ).getDate();
 
   return (
     <>
