@@ -6,6 +6,18 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { accounts, categories } from "@/lib/data"
 import { formatCurrency } from "@/lib/utils"
 import type { Transaction } from "@/lib/types"
+import { useEffect, useState } from "react"
+
+// A client-side component to safely render the date
+function SafeDate({ dateString }: { dateString: string }) {
+  const [formattedDate, setFormattedDate] = useState("");
+
+  useEffect(() => {
+    setFormattedDate(new Date(dateString).toLocaleDateString());
+  }, [dateString]);
+
+  return <span>{formattedDate}</span>;
+}
 
 export const columns: ColumnDef<Transaction>[] = [
   {
@@ -55,7 +67,7 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "date",
     header: "Date",
-    cell: ({ row }) => new Date(row.getValue("date")).toLocaleDateString(),
+    cell: ({ row }) => <SafeDate dateString={row.getValue("date")} />,
   },
   {
     accessorKey: "type",
