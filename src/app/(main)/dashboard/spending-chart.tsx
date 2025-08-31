@@ -1,3 +1,4 @@
+
 "use client"
 
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts"
@@ -29,9 +30,11 @@ const chartConfig = {
 }
 
 export function SpendingChart() {
+  const [isClient, setIsClient] = useState(false)
   const [chartData, setChartData] = useState(initialChartData);
 
   useEffect(() => {
+    setIsClient(true)
     setChartData([
       { month: "Jan", total: Math.floor(Math.random() * 2000) + 1000 },
       { month: "Feb", total: Math.floor(Math.random() * 2000) + 1000 },
@@ -48,6 +51,22 @@ export function SpendingChart() {
     ])
   }, [])
 
+  // Render a placeholder on the server and the actual chart on the client
+  if (!isClient) {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Monthly Spending</CardTitle>
+                <CardDescription>Your spending summary for the last 12 months.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="h-64 w-full flex items-center justify-center">
+                    Loading chart...
+                </div>
+            </CardContent>
+        </Card>
+    )
+  }
 
   return (
     <Card>
